@@ -1,6 +1,8 @@
 package com.kylelieber;
 
 import com.kylelieber.client.TrimlightClient;
+import com.kylelieber.data.dao.ScheduleRepository;
+import com.kylelieber.data.models.ScheduleEntity;
 import com.kylelieber.models.CombinedEffect;
 import com.kylelieber.models.CurrentDateTime;
 import com.kylelieber.models.DeviceDetailsRequest;
@@ -26,13 +28,17 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
-import java.time.LocalDateTime;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Path("/trimlight")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -40,10 +46,12 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 public class TrimlightResource {
 
   private final TrimlightClient trimlightClient;
+  private final ScheduleRepository scheduleRepository;
 
   @Inject
-  public TrimlightResource(@RestClient TrimlightClient trimlightClient) {
+  public TrimlightResource(@RestClient TrimlightClient trimlightClient, ScheduleRepository scheduleRepository) {
     this.trimlightClient = trimlightClient;
+    this.scheduleRepository = scheduleRepository;
   }
 
   @GET
@@ -129,5 +137,26 @@ public class TrimlightResource {
     return trimlightClient.addOverlayEffects(
       OverlayEffectsRequest.of(deviceId, overlayEffects)
     );
+  }
+
+  @GET
+  @Path("/schedule/{scheduleId}")
+  public Optional<ScheduleEntity> getScheduleById(
+    @PathParam("scheduleId") long scheduleId
+  ) {
+    return Optional.ofNullable(scheduleRepository.findById(scheduleId));
+  }
+
+  @GET
+  @Path("/schedule")
+  public List<ScheduleEntity> getSchedules() {
+    return scheduleRepository.findAll().list();
+  }
+
+  @PUT
+  @Path("/schedule")
+  public ScheduleEntity getSchedules(ScheduleEntity scheduleEntity) {
+    scheduleEntity.persist();
+    return scheduleEntity;
   }
 }

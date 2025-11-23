@@ -55,8 +55,4 @@ public interface TrimlightClient {
   @POST
   @Path("/device/effect/overlay")
   OverlayEffectsResponse addOverlayEffects(OverlayEffectsRequest request);
-  //  @ClientObjectMapper
-  //  static ObjectMapper objectMapper(ObjectMapper defaultObjectMapper) {
-  //    return defaultObjectMapper.copy().registerModule(new GuavaModule());
-  //  }
 }

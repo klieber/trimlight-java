@@ -5,4 +5,5 @@ import org.immutables.value.Value.Immutable;
 
 @Immutable
 @BuilderStyle
-public interface DevicesResponseIF extends DeviceDetailsResponseIF {}
+public interface DevicesResponseIF
+  extends BasePayloadResponse<DevicesPayload> {}
