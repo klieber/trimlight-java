@@ -1,28 +1,28 @@
 package com.kylelieber.trimlight.service;
 
-import com.kylelieber.trimlight.client.TrimlightClient;
+import com.kylelieber.trimlight.edge.client.TrimlightEdgeClient;
 import com.kylelieber.trimlight.data.repository.ScheduleRepository;
 import com.kylelieber.trimlight.data.entity.ScheduleEntity;
-import com.kylelieber.trimlight.client.models.CombinedEffect;
-import com.kylelieber.trimlight.client.models.CurrentDateTime;
-import com.kylelieber.trimlight.client.models.DeviceDetailsRequest;
-import com.kylelieber.trimlight.client.models.DeviceDetailsResponse;
-import com.kylelieber.trimlight.client.models.DeviceSwitchState;
-import com.kylelieber.trimlight.client.models.DeviceSwitchStateRequest;
-import com.kylelieber.trimlight.client.models.DeviceSwitchStateResponse;
-import com.kylelieber.trimlight.client.models.DevicesRequest;
-import com.kylelieber.trimlight.client.models.DevicesResponse;
-import com.kylelieber.trimlight.client.models.OverlayEffects;
-import com.kylelieber.trimlight.client.models.OverlayEffectsRequest;
-import com.kylelieber.trimlight.client.models.OverlayEffectsResponse;
-import com.kylelieber.trimlight.client.models.PreviewEffect;
-import com.kylelieber.trimlight.client.models.PreviewEffectRequest;
-import com.kylelieber.trimlight.client.models.PreviewEffectResponse;
-import com.kylelieber.trimlight.client.models.UpdateCombinedEffectRequest;
-import com.kylelieber.trimlight.client.models.UpdateCombinedEffectResponse;
-import com.kylelieber.trimlight.client.models.ViewEffect;
-import com.kylelieber.trimlight.client.models.ViewEffectRequest;
-import com.kylelieber.trimlight.client.models.ViewEffectResponse;
+import com.kylelieber.trimlight.edge.client.models.CombinedEffect;
+import com.kylelieber.trimlight.edge.client.models.CurrentDateTime;
+import com.kylelieber.trimlight.edge.client.models.DeviceDetailsRequest;
+import com.kylelieber.trimlight.edge.client.models.DeviceDetailsResponse;
+import com.kylelieber.trimlight.edge.client.models.DeviceSwitchState;
+import com.kylelieber.trimlight.edge.client.models.DeviceSwitchStateRequest;
+import com.kylelieber.trimlight.edge.client.models.DeviceSwitchStateResponse;
+import com.kylelieber.trimlight.edge.client.models.DevicesRequest;
+import com.kylelieber.trimlight.edge.client.models.DevicesResponse;
+import com.kylelieber.trimlight.edge.client.models.OverlayEffects;
+import com.kylelieber.trimlight.edge.client.models.OverlayEffectsRequest;
+import com.kylelieber.trimlight.edge.client.models.OverlayEffectsResponse;
+import com.kylelieber.trimlight.edge.client.models.PreviewEffect;
+import com.kylelieber.trimlight.edge.client.models.PreviewEffectRequest;
+import com.kylelieber.trimlight.edge.client.models.PreviewEffectResponse;
+import com.kylelieber.trimlight.edge.client.models.UpdateCombinedEffectRequest;
+import com.kylelieber.trimlight.edge.client.models.UpdateCombinedEffectResponse;
+import com.kylelieber.trimlight.edge.client.models.ViewEffect;
+import com.kylelieber.trimlight.edge.client.models.ViewEffectRequest;
+import com.kylelieber.trimlight.edge.client.models.ViewEffectResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DefaultValue;
@@ -45,12 +45,12 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class TrimlightResource {
 
-  private final TrimlightClient trimlightClient;
+  private final TrimlightEdgeClient trimlightEdgeClient;
   private final ScheduleRepository scheduleRepository;
 
   @Inject
-  public TrimlightResource(@RestClient TrimlightClient trimlightClient, ScheduleRepository scheduleRepository) {
-    this.trimlightClient = trimlightClient;
+  public TrimlightResource(@RestClient TrimlightEdgeClient trimlightEdgeClient, ScheduleRepository scheduleRepository) {
+    this.trimlightEdgeClient = trimlightEdgeClient;
     this.scheduleRepository = scheduleRepository;
   }
 
@@ -59,7 +59,7 @@ public class TrimlightResource {
   public DevicesResponse getDevices(
     @QueryParam("page") @DefaultValue("1") int page
   ) {
-    return trimlightClient.getDevices(DevicesRequest.of(page));
+    return trimlightEdgeClient.getDevices(DevicesRequest.of(page));
   }
 
   @GET
@@ -79,7 +79,7 @@ public class TrimlightResource {
       .setWeekday(now.getDayOfWeek().getValue())
       .build();
 
-    return trimlightClient.getDevice(
+    return trimlightEdgeClient.getDevice(
       DeviceDetailsRequest.of(deviceId, currentDateTime)
     );
   }
@@ -90,7 +90,7 @@ public class TrimlightResource {
     @PathParam("deviceId") String deviceId,
     @QueryParam("state") int state
   ) {
-    return trimlightClient.setDeviceSwitchState(
+    return trimlightEdgeClient.setDeviceSwitchState(
       DeviceSwitchStateRequest.of(deviceId, DeviceSwitchState.of(state))
     );
   }
@@ -101,7 +101,7 @@ public class TrimlightResource {
     @PathParam("deviceId") String deviceId,
     PreviewEffect effect
   ) {
-    return trimlightClient.previewEffect(
+    return trimlightEdgeClient.previewEffect(
       PreviewEffectRequest.of(deviceId, effect)
     );
   }
@@ -112,7 +112,7 @@ public class TrimlightResource {
     @PathParam("deviceId") String deviceId,
     @PathParam("effectId") int effectId
   ) {
-    return trimlightClient.viewEffect(
+    return trimlightEdgeClient.viewEffect(
       ViewEffectRequest.of(deviceId, ViewEffect.of(effectId))
     );
   }
@@ -123,7 +123,7 @@ public class TrimlightResource {
     @PathParam("deviceId") String deviceId,
     CombinedEffect combinedEffect
   ) {
-    return trimlightClient.updateCombinedEffect(
+    return trimlightEdgeClient.updateCombinedEffect(
       UpdateCombinedEffectRequest.of(deviceId, combinedEffect)
     );
   }
@@ -134,7 +134,7 @@ public class TrimlightResource {
     @PathParam("deviceId") String deviceId,
     OverlayEffects overlayEffects
   ) {
-    return trimlightClient.addOverlayEffects(
+    return trimlightEdgeClient.addOverlayEffects(
       OverlayEffectsRequest.of(deviceId, overlayEffects)
     );
   }

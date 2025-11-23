@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.kylelieber.trimlight.client.TrimlightClient;
-import com.kylelieber.trimlight.client.models.DeviceSummary;
-import com.kylelieber.trimlight.client.models.DevicesPayload;
-import com.kylelieber.trimlight.client.models.DevicesRequest;
-import com.kylelieber.trimlight.client.models.DevicesResponse;
+import com.kylelieber.trimlight.edge.client.TrimlightEdgeClient;
+import com.kylelieber.trimlight.edge.client.models.DeviceSummary;
+import com.kylelieber.trimlight.edge.client.models.DevicesPayload;
+import com.kylelieber.trimlight.edge.client.models.DevicesRequest;
+import com.kylelieber.trimlight.edge.client.models.DevicesResponse;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
@@ -21,7 +21,7 @@ class TrimlightResourceTest {
 
   @InjectMock
   @RestClient
-  private TrimlightClient trimlightClient;
+  private TrimlightEdgeClient trimlightClient;
 
   @Test
   void testGetDevices() {
