@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import com.kylelieber.client.TrimlightClient;
-import com.kylelieber.models.DeviceSummary;
-import com.kylelieber.models.DevicesPayload;
-import com.kylelieber.models.DevicesRequest;
-import com.kylelieber.models.DevicesResponse;
+import com.kylelieber.trimlight.client.TrimlightClient;
+import com.kylelieber.trimlight.client.models.DeviceSummary;
+import com.kylelieber.trimlight.client.models.DevicesPayload;
+import com.kylelieber.trimlight.client.models.DevicesRequest;
+import com.kylelieber.trimlight.client.models.DevicesResponse;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.eclipse.microprofile.rest.client.inject.RestClient;

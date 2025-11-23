@@ -24,7 +24,7 @@
     </dependency>
     <dependency>
       <groupId>com.kylelieber</groupId>
-      <artifactId>trimlight-rest</artifactId>
+      <artifactId>trimlight-service</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>

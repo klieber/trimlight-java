@@ -11,7 +11,7 @@
     <module>trimlight-app</module>
     <module>trimlight-data</module>
     <module>trimlight-edge-client</module>
-    <module>trimlight-rest</module>
+    <module>trimlight-service</module>
   </modules>
 
   <properties>
@@ -45,7 +45,7 @@
       </dependency>
       <dependency>
         <groupId>com.kylelieber</groupId>
-        <artifactId>trimlight-rest</artifactId>
+        <artifactId>trimlight-service</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
