@@ -11,7 +11,6 @@
   <artifactId>trimlight-app</artifactId>
 
   <dependencies>
-    <!-- Pull in both modules -->
     <dependency>
       <groupId>com.kylelieber</groupId>
       <artifactId>trimlight-data</artifactId>
@@ -28,17 +27,18 @@
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>com.kylelieber</groupId>
+      <artifactId>trimlight-workers</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
-
-    <!-- Runtime dependencies -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jdbc-h2</artifactId>
     </dependency>
-
-    <!-- Testing -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>

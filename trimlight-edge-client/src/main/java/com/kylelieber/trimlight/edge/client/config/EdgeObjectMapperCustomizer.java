@@ -1,14 +1,13 @@
-package com.kylelieber.trimlight.service.config;
+package com.kylelieber.trimlight.edge.client.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
-import jakarta.inject.Singleton;
+import jakarta.enterprise.context.ApplicationScoped;
 
-@Singleton
-public class TrimlightApiObjectMapperCustomizer
-  implements ObjectMapperCustomizer {
+@ApplicationScoped
+public class EdgeObjectMapperCustomizer implements ObjectMapperCustomizer {
 
   @Override
   public void customize(ObjectMapper objectMapper) {

@@ -1,20 +1,16 @@
 package com.kylelieber.trimlight.edge.client;
 
-import com.kylelieber.trimlight.edge.client.config.TrimlightClientHeadersFactory;
-import com.kylelieber.trimlight.edge.client.models.DeviceDetailsRequest;
-import com.kylelieber.trimlight.edge.client.models.DeviceDetailsResponse;
-import com.kylelieber.trimlight.edge.client.models.DeviceSwitchStateRequest;
-import com.kylelieber.trimlight.edge.client.models.DeviceSwitchStateResponse;
-import com.kylelieber.trimlight.edge.client.models.DevicesRequest;
-import com.kylelieber.trimlight.edge.client.models.DevicesResponse;
-import com.kylelieber.trimlight.edge.client.models.OverlayEffectsRequest;
-import com.kylelieber.trimlight.edge.client.models.OverlayEffectsResponse;
-import com.kylelieber.trimlight.edge.client.models.PreviewEffectRequest;
-import com.kylelieber.trimlight.edge.client.models.PreviewEffectResponse;
-import com.kylelieber.trimlight.edge.client.models.UpdateCombinedEffectRequest;
-import com.kylelieber.trimlight.edge.client.models.UpdateCombinedEffectResponse;
-import com.kylelieber.trimlight.edge.client.models.ViewEffectRequest;
-import com.kylelieber.trimlight.edge.client.models.ViewEffectResponse;
+import com.kylelieber.trimlight.edge.client.config.EdgeClientHeadersFactory;
+import com.kylelieber.trimlight.edge.client.models.EdgeCombinedEffectRequest;
+import com.kylelieber.trimlight.edge.client.models.EdgeDeviceListRequest;
+import com.kylelieber.trimlight.edge.client.models.EdgeDeviceListResponse;
+import com.kylelieber.trimlight.edge.client.models.EdgeDeviceRequest;
+import com.kylelieber.trimlight.edge.client.models.EdgeDeviceResponse;
+import com.kylelieber.trimlight.edge.client.models.EdgeDeviceSwitchStateRequest;
+import com.kylelieber.trimlight.edge.client.models.EdgeOverlayEffectsRequest;
+import com.kylelieber.trimlight.edge.client.models.EdgePreviewEffectRequest;
+import com.kylelieber.trimlight.edge.client.models.EdgeResponse;
+import com.kylelieber.trimlight.edge.client.models.EdgeViewEffectRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -22,38 +18,34 @@ import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterRestClient(baseUri = "https://trimlight.ledhue.com/trimlight")
-@RegisterClientHeaders(TrimlightClientHeadersFactory.class)
+@RegisterClientHeaders(EdgeClientHeadersFactory.class)
 @Path("/v1/oauth/resources")
 public interface TrimlightEdgeClient {
   @GET
   @Path("/devices")
-  DevicesResponse getDevices(DevicesRequest request);
+  EdgeDeviceListResponse getDevices(EdgeDeviceListRequest request);
 
   @POST
   @Path("/device/get")
-  DeviceDetailsResponse getDevice(DeviceDetailsRequest request);
+  EdgeDeviceResponse getDevice(EdgeDeviceRequest request);
 
   @POST
   @Path("/device/update")
-  DeviceSwitchStateResponse setDeviceSwitchState(
-    DeviceSwitchStateRequest request
-  );
+  EdgeResponse setDeviceSwitchState(EdgeDeviceSwitchStateRequest request);
 
   @POST
   @Path("/device/effect/preview")
-  PreviewEffectResponse previewEffect(PreviewEffectRequest request);
+  EdgeResponse previewEffect(EdgePreviewEffectRequest request);
 
   @POST
   @Path("/device/effect/view")
-  ViewEffectResponse viewEffect(ViewEffectRequest request);
+  EdgeResponse viewEffect(EdgeViewEffectRequest request);
 
   @POST
   @Path("/device/combined-effect/save")
-  UpdateCombinedEffectResponse updateCombinedEffect(
-    UpdateCombinedEffectRequest request
-  );
+  EdgeResponse updateCombinedEffect(EdgeCombinedEffectRequest request);
 
   @POST
   @Path("/device/effect/overlay")
-  OverlayEffectsResponse addOverlayEffects(OverlayEffectsRequest request);
+  EdgeResponse addOverlayEffects(EdgeOverlayEffectsRequest request);
 }

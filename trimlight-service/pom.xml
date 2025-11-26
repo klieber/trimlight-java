@@ -11,8 +11,6 @@
   <artifactId>trimlight-service</artifactId>
 
   <dependencies>
-
-    <!-- Jackson/Guava -->
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-guava</artifactId>
@@ -21,7 +19,6 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
-    <!-- Data layer dependency -->
     <dependency>
       <groupId>com.kylelieber</groupId>
       <artifactId>trimlight-data</artifactId>
@@ -32,14 +29,10 @@
       <artifactId>trimlight-edge-client</artifactId>
       <version>1.0.0-SNAPSHOT</version>
     </dependency>
-
-    <!-- REST -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest</artifactId>
     </dependency>
-
-    <!-- REST Client -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client</artifactId>
@@ -52,8 +45,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-jackson</artifactId>
     </dependency>
-
-    <!-- Immutables -->
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
@@ -64,7 +55,6 @@
 
   <build>
     <plugins>
-      <!-- Jandex for CDI bean discovery -->
       <plugin>
         <groupId>io.smallrye</groupId>
         <artifactId>jandex-maven-plugin</artifactId>

@@ -12,6 +12,8 @@
     <module>trimlight-data</module>
     <module>trimlight-edge-client</module>
     <module>trimlight-service</module>
+    <module>trimlight-style</module>
+    <module>trimlight-workers</module>
   </modules>
 
   <properties>
@@ -36,8 +38,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
-      <!-- Internal module versions -->
       <dependency>
         <groupId>com.kylelieber</groupId>
         <artifactId>trimlight-data</artifactId>
