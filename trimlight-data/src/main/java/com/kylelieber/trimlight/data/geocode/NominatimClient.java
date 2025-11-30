@@ -11,7 +11,6 @@ import java.util.List;
 
 @Path("/search")
 @RegisterRestClient(configKey = "nominatim")
-//@ClientHeaderParam(name = "User-Agent", value = "HomeLightingSystem/1.0")
 public interface NominatimClient {
 
   @GET

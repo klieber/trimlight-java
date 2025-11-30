@@ -7,12 +7,14 @@ import com.kylelieber.trimlight.data.models.ScheduleDateRange;
 import com.kylelieber.trimlight.data.models.ScheduleDateType;
 import com.kylelieber.trimlight.data.models.ScheduleEgg;
 import com.kylelieber.trimlight.data.models.ScheduleTime;
+import com.kylelieber.trimlight.data.models.ScheduleTimeType;
 import com.kylelieber.trimlight.data.repository.ScheduleRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +30,6 @@ public class ScheduleManager {
 
   @Transactional
   public Schedule createSchedule(ScheduleEgg newSchedule) {
-    //    boolean hasConflicts = getAllSchedules()
-    //      .stream()
-    //      .anyMatch(newSchedule::hasConflict);
-    //
-    //    if (hasConflicts) {
-    //      throw new TrimlightException(
-    //        "Schedule conflicts with existing schedules"
-    //      );
-    //    }
-
     ScheduleEntity entity = new ScheduleEntity();
     entity.deviceId = newSchedule.getDeviceId();
     entity.startType = newSchedule.getStartTime().getType();
@@ -64,9 +56,7 @@ public class ScheduleManager {
         dateRange
           .getStartDate()
           .ifPresent(startDate -> entity.startDate = startDate);
-        dateRange
-          .getEndDate()
-          .ifPresent(endDate -> entity.endDate = endDate);
+        dateRange.getEndDate().ifPresent(endDate -> entity.endDate = endDate);
         dateRange.getHoliday().ifPresent(holiday -> entity.holiday = holiday);
         entity.relativeStartDateInDays = dateRange.getRelativeStartDays();
         entity.relativeEndDateInDays = dateRange.getRelativeEndDays();
@@ -78,6 +68,16 @@ public class ScheduleManager {
       .from(newSchedule)
       .setScheduleId(entity.id)
       .build();
+  }
+
+  @Transactional
+  public void deleteById(long scheduleId) {
+    scheduleRepository
+      .findByIdOptional(scheduleId)
+      .ifPresent(entity -> {
+        entity.delete();
+        entity.persist();
+      });
   }
 
   public List<Schedule> getAllSchedules() {
@@ -104,63 +104,20 @@ public class ScheduleManager {
   }
 
   private Schedule toSchedule(ScheduleEntity entity) {
-    ScheduleTime startTime;
-    if (entity.startTime == null) {
-      startTime =
-        ScheduleTime
-          .builder()
-          .setType(entity.startType)
-          .setRelativeTime(Duration.ofMillis(entity.relativeStartTimeInMillis))
-          .build();
-    } else {
-      startTime =
-        ScheduleTime
-          .builder()
-          .setType(entity.startType)
-          .setTime(entity.startTime)
-          .build();
-    }
+    ScheduleTime startTime = createScheduleTime(
+      entity.startType,
+      entity.startTime,
+      entity.relativeStartTimeInMillis
+    );
 
-    ScheduleTime endTime;
-    if (entity.endTime == null) {
-      endTime =
-        ScheduleTime
-          .builder()
-          .setType(entity.endType)
-          .setRelativeTime(Duration.ofMillis(entity.relativeEndTimeInMillis))
-          .build();
-    } else {
-      endTime =
-        ScheduleTime
-          .builder()
-          .setType(entity.endType)
-          .setTime(entity.endTime)
-          .build();
-    }
-    Optional<ScheduleDateRange> dateRange = Optional.empty();
+    ScheduleTime endTime = createScheduleTime(
+      entity.endType,
+      entity.endTime,
+      entity.relativeEndTimeInMillis
+    );
 
-    if (entity.dateType == ScheduleDateType.SPECIFIC_RANGE) {
-      dateRange =
-        Optional.of(
-          ScheduleDateRange
-            .builder()
-            .setDateType(entity.dateType)
-            .setStartDate(entity.startDate)
-            .setEndDate(entity.endDate)
-            .build()
-        );
-    } else if (entity.dateType == ScheduleDateType.HOLIDAY_RANGE) {
-      dateRange =
-        Optional.of(
-          ScheduleDateRange
-            .builder()
-            .setDateType(entity.dateType)
-            .setHoliday(entity.holiday)
-            .setRelativeStartDays(entity.relativeStartDateInDays)
-            .setRelativeEndDays(entity.relativeEndDateInDays)
-            .build()
-        );
-    }
+    Optional<ScheduleDateRange> dateRange = createDateRange(entity);
+
     return Schedule
       .builder()
       .setScheduleId(entity.id)
@@ -172,5 +129,47 @@ public class ScheduleManager {
       .setEffectId(entity.effectId)
       .setEnabled(entity.enabled)
       .build();
+  }
+
+  private ScheduleTime createScheduleTime(
+    ScheduleTimeType type,
+    LocalTime time,
+    long relativeTime
+  ) {
+    if (time == null) {
+      return ScheduleTime
+        .builder()
+        .setType(type)
+        .setRelativeTime(Duration.ofMillis(relativeTime))
+        .build();
+    } else {
+      return ScheduleTime.builder().setType(type).setTime(time).build();
+    }
+  }
+
+  private Optional<ScheduleDateRange> createDateRange(ScheduleEntity entity) {
+    if (entity.dateType == ScheduleDateType.SPECIFIC_RANGE) {
+      return Optional.of(
+        ScheduleDateRange
+          .builder()
+          .setDateType(entity.dateType)
+          .setStartDate(entity.startDate)
+          .setEndDate(entity.endDate)
+          .build()
+      );
+    }
+
+    if (entity.dateType == ScheduleDateType.HOLIDAY_RANGE) {
+      return Optional.of(
+        ScheduleDateRange
+          .builder()
+          .setDateType(entity.dateType)
+          .setHoliday(entity.holiday)
+          .setRelativeStartDays(entity.relativeStartDateInDays)
+          .setRelativeEndDays(entity.relativeEndDateInDays)
+          .build()
+      );
+    }
+    return Optional.empty();
   }
 }

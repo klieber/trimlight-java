@@ -7,6 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class ScheduleRepository implements PanacheRepository<ScheduleEntity> {
+
   public PanacheQuery<ScheduleEntity> findByDeviceId(String deviceId) {
     return find("deviceId", deviceId);
   }

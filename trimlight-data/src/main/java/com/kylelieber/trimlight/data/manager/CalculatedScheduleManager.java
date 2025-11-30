@@ -6,35 +6,31 @@ import com.kylelieber.trimlight.data.models.CalculatedScheduleDateRange;
 import com.kylelieber.trimlight.data.models.Location;
 import com.kylelieber.trimlight.data.models.Schedule;
 import com.kylelieber.trimlight.data.models.ScheduleTime;
-import de.focus_shift.jollyday.core.Holiday;
-import de.focus_shift.jollyday.core.HolidayCalendar;
-import de.focus_shift.jollyday.core.HolidayManager;
-import de.focus_shift.jollyday.core.ManagerParameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Year;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @ApplicationScoped
 public class CalculatedScheduleManager {
 
   private final ScheduleManager scheduleManager;
   private final LocationManager locationManager;
+  private final HolidayService holidayService;
 
   @Inject
   public CalculatedScheduleManager(
     ScheduleManager scheduleManager,
-    LocationManager locationManager
+    LocationManager locationManager,
+    HolidayService holidayService
   ) {
     this.scheduleManager = scheduleManager;
     this.locationManager = locationManager;
+    this.holidayService = holidayService;
   }
 
   public List<CalculatedSchedule> getAllSchedules() {
@@ -145,7 +141,7 @@ public class CalculatedScheduleManager {
     long relativeStart,
     long relativeEnd
   ) {
-    return getHoliday(location, holidayName)
+    return holidayService.getHolidayDate(location, holidayName)
       .map(holidayDate ->
         CalculatedScheduleDateRange
           .builder()
@@ -153,22 +149,5 @@ public class CalculatedScheduleManager {
           .setEndDate(holidayDate.plusDays(relativeEnd))
           .build()
       );
-  }
-
-  private Optional<LocalDate> getHoliday(
-    Location location,
-    String holidayName
-  ) {
-    HolidayManager usHolidayManager = HolidayManager.getInstance(
-      ManagerParameters.create(HolidayCalendar.UNITED_STATES)
-    );
-
-    Set<Holiday> holidays = usHolidayManager.getHolidays(Year.now(location.getTimezone()));
-
-    return holidays
-      .stream()
-      .filter(h -> h.getPropertiesKey().equalsIgnoreCase(holidayName))
-      .map(Holiday::getDate)
-      .findFirst();
   }
 }
