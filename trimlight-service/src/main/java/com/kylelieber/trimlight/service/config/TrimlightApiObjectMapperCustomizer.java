@@ -2,6 +2,7 @@ package com.kylelieber.trimlight.service.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import io.quarkus.jackson.ObjectMapperCustomizer;
 import jakarta.inject.Singleton;
@@ -14,5 +15,6 @@ public class TrimlightApiObjectMapperCustomizer
   public void customize(ObjectMapper objectMapper) {
     objectMapper.registerModule(new GuavaModule());
     objectMapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_EMPTY);
+    objectMapper.enable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS);
   }
 }

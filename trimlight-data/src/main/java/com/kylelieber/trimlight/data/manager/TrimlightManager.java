@@ -25,15 +25,17 @@ import com.kylelieber.trimlight.edge.client.models.EdgeViewEffect;
 import com.kylelieber.trimlight.edge.client.models.EdgeViewEffectRequest;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Singleton
 public class TrimlightManager {
@@ -140,19 +142,21 @@ public class TrimlightManager {
       )
     );
 
+
     Retryer<Optional<Effect>> retryer = RetryerBuilder
       .<Optional<Effect>>newBuilder()
       .retryIfResult(result ->
         result.filter(effect -> effect.getEffectId() == effectId).isEmpty()
       )
       .retryIfException()
-      .withWaitStrategy(WaitStrategies.fixedWait(2, TimeUnit.SECONDS))
-      .withStopStrategy(StopStrategies.stopAfterAttempt(5))
+      .withWaitStrategy(WaitStrategies.fixedWait(5, TimeUnit.SECONDS))
+      .withStopStrategy(StopStrategies.stopAfterAttempt(2))
       .build();
 
     try {
+      Thread.sleep(Duration.ofSeconds(5));
       return retryer.call(() -> getCurrentEffect(deviceId)).orElseThrow();
-    } catch (ExecutionException | RetryException e) {
+    } catch (ExecutionException | RetryException | InterruptedException e) {
       throw new TrimlightException("Unable to confirm effect change.", e);
     }
   }

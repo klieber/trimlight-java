@@ -1,54 +1,47 @@
 package com.kylelieber.trimlight.service;
 
-import com.kylelieber.trimlight.data.manager.ScheduleManager;
-import com.kylelieber.trimlight.data.models.Schedule;
-import com.kylelieber.trimlight.data.models.ScheduleEgg;
+import com.kylelieber.trimlight.data.manager.CalculatedScheduleManager;
+import com.kylelieber.trimlight.data.models.CalculatedSchedule;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+
 import java.util.List;
 import java.util.Optional;
 
 @Path("/trimlight")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class ScheduleResource {
+public class CalculatedScheduleResource {
 
-  private final ScheduleManager scheduleManager;
+  private final CalculatedScheduleManager scheduleManager;
 
   @Inject
-  public ScheduleResource(ScheduleManager scheduleManager) {
+  public CalculatedScheduleResource(CalculatedScheduleManager scheduleManager) {
     this.scheduleManager = scheduleManager;
   }
 
   @GET
-  @Path("/schedule")
-  public List<Schedule> getAllSchedules() {
+  @Path("/schedule/calc")
+  public List<CalculatedSchedule> getAllSchedules() {
     return scheduleManager.getAllSchedules();
   }
 
-  @PUT
-  @Path("/schedule")
-  public Schedule createSchedule(ScheduleEgg scheduleEgg) {
-    return scheduleManager.createSchedule(scheduleEgg);
-  }
-
   @GET
-  @Path("/schedule/{scheduleId}")
-  public Optional<Schedule> getScheduleById(
+  @Path("/schedule/calc/{scheduleId}")
+  public Optional<CalculatedSchedule> getScheduleById(
     @PathParam("scheduleId") long scheduleId
   ) {
     return scheduleManager.getScheduleById(scheduleId);
   }
 
   @GET
-  @Path("/schedule/device/{deviceId}")
-  public List<Schedule> getScheduleByDeviceId(
+  @Path("/schedule/calc/device/{deviceId}")
+  public List<CalculatedSchedule> getScheduleByDeviceId(
     @PathParam("deviceId") String deviceId
   ) {
     return scheduleManager.getSchedulesByDeviceId(deviceId);
